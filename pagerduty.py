@@ -51,6 +51,11 @@ def get_authentication():
         api_token = config.get('PagerDuty', 'api_token') if config.has_option('PagerDuty', 'api_token') else raw_input('PagerDuty API Token: ')
         primary_schedule = config.get('PagerDuty', 'primary_schedule') if config.has_option('PagerDuty', 'primary_schedule') else raw_input('PagerDuty Schedule ID: ')
         shift_start_hour = int(config.get('PagerDuty', 'shift_start_hour')) * -1 if config.has_option('PagerDuty', 'shift_start_hour') else int(raw_input('Schedule Start Hour: ')) * -1
+        timezone = config.get('PagerDuty', 'timezone') if config.has_option('PagerDuty', 'timezone') else None
+	if timezone:
+	    os.environ['TZ'] = timezone
+            time.tzset()
+       
 
     authenticated = 'In Progress'
     if "<error>" in get_schedule(primary_schedule):
