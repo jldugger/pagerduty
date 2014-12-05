@@ -166,9 +166,9 @@ def email_week():
 
     email = """Hello Team,
 
-Below is the Pager Duty schedule for this week.
+Below is the Pager Duty schedule for next week.
 
-Once again, the Support Team appreciates your contributions. However, if you cannot fulfill your duty, please notify your backup immediately. It is vital for you to communicate this with your teammate.
+If you cannot fulfill your duty, please notify your backup immediately. It is vital for you to communicate this with your teammate.
 
 %s
 Thanks,
@@ -183,7 +183,7 @@ The Support Team
     #print 'Email list: %s' % email_list
 
     if bypass_prompts or raw_input('Send email? [y/N] ').lower() == 'y':
-        email_msg("You're on call this week", email_list, txt, html)
+        email_msg("You're on call next week", email_list, txt, html)
         #print "Weekly Support Schedule Emailed!"
     else:
         #print "Email not sent."
