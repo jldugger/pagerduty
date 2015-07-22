@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import datetime
+from dateutil import parser
 import calendar
 import getpass
 import json
@@ -102,7 +103,7 @@ def get_user_schedule(schedule_id=False, needle_name=False, schedule=False):
         shift_start = entry['start']
 
         if not needle_name or needle_name.lower() in agent_name.lower():
-            start_stamp = calendar.timegm(time.strptime(shift_start, time_format))
+            start_stamp = time.mktime(parser.parse(shift_start).timetuple())
             start_date = time.localtime(start_stamp)
             shift_start = time.strftime('%m.%d.%Y - %A (%I%p %Z)', start_date)
             result[start_date] = {
