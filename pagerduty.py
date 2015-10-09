@@ -97,7 +97,7 @@ def get_user_schedule(schedule_id=False, needle_name=False, schedule=False):
         schedule = get_schedule(schedule_id)
 
     result = {}
-    for entry in schedule['entries'][1:]:
+    for entry in schedule['entries'][0:]:
         agent_name = entry['user']['name']
         agent_email = entry['user']['email']
         shift_start = entry['start']
