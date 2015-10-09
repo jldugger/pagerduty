@@ -33,8 +33,8 @@ class TokenAuth(requests.auth.AuthBase):
 def get_authentication():
     global domain
     global api_token
-    global primary_schedule
-    global shift_start_hour
+    global primary_sched
+    global start_hour
     global authenticated
 
     if authenticated:
@@ -49,18 +49,29 @@ def get_authentication():
         config = ConfigParser.RawConfigParser()
         config.read(configfile)
 
-        domain = config.get('PagerDuty', 'domain') if config.has_option('PagerDuty', 'domain') else raw_input('PagerDuty Domain: ')
-        api_token = config.get('PagerDuty', 'api_token') if config.has_option('PagerDuty', 'api_token') else raw_input('PagerDuty API Token: ')
-        primary_schedule = config.get('PagerDuty', 'primary_schedule') if config.has_option('PagerDuty', 'primary_schedule') else raw_input('PagerDuty Schedule ID: ')
-        shift_start_hour = int(config.get('PagerDuty', 'shift_start_hour')) * -1 if config.has_option('PagerDuty', 'shift_start_hour') else int(raw_input('Schedule Start Hour: ')) * -1
-        timezone = config.get('PagerDuty', 'timezone') if config.has_option('PagerDuty', 'timezone') else None
+        domain = (config.get('PagerDuty', 'domain')
+                  if config.has_option('PagerDuty', 'domain')
+                  else raw_input('PagerDuty Domain: '))
+        api_token = (config.get('PagerDuty', 'api_token')
+                     if config.has_option('PagerDuty', 'api_token')
+                     else raw_input('PagerDuty API Token: '))
+        primary_sched = (config.get('PagerDuty', 'primary_schedule')
+                         if config.has_option('PagerDuty', 'primary_schedule')
+                         else raw_input('PagerDuty Schedule ID: '))
+        start_hour = (int(config.get('PagerDuty', 'shift_start_hour')) * -1
+                      if config.has_option('PagerDuty', 'shift_start_hour')
+                      else int(raw_input('Schedule Start Hour: ')) * -1)
+        timezone = (config.get('PagerDuty', 'timezone')
+                    if config.has_option('PagerDuty', 'timezone')
+                    else None)
         if timezone:
             os.environ['TZ'] = timezone
             time.tzset()
 
     authenticated = 'In Progress'
-    if "<error>" in get_schedule(primary_schedule):
-        sys.stdout.write('Authentication with "%s" failed. Please try again...' % (admin_email))
+    if "<error>" in get_schedule(primary_sched):
+        sys.stdout.write('Authentication with "%s" failed.'
+                         'Please try again...' % (admin_email))
         sys.exit(1)
 
     # print 'Successfully authenticated to PagerDuty!'
@@ -71,12 +82,13 @@ def get_schedule(schedule_id=False, time_period=False, offset_days=False):
     get_authentication()
 
     if not schedule_id:
-        schedule_id = primary_schedule
+        schedule_id = primary_sched
 
     offset = datetime.timedelta(days=0)
     if offset_days:
         offset = datetime.timedelta(days=offset_days)
-    now = datetime.datetime.today() + offset + datetime.timedelta(hours=shift_start_hour)
+    now = (datetime.datetime.today()
+           + offset + datetime.timedelta(hours=start_hour))
 
     start_date = now.strftime('%Y-%m-%d')
     if time_period == 'day':
@@ -86,7 +98,8 @@ def get_schedule(schedule_id=False, time_period=False, offset_days=False):
     else:
         end_date = (now + datetime.timedelta(days=92)).strftime('%Y-%m-%d')
 
-    return requests.get('https://%s.pagerduty.com/api/v1/schedules/%s/entries' %
+    return requests.get('https://%s.pagerduty.com/api/v1/schedules/%s/'
+                        'entries' %
                         (domain, schedule_id),
                         auth=TokenAuth(api_token),
                         params={'since': start_date, 'until': end_date}).json()

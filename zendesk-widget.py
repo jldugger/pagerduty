@@ -22,17 +22,20 @@ def read_configurations():
     config = ConfigParser.RawConfigParser()
     config.read(configfile)
 
-    secondary = config.get('Cli', 'secondary_schedule') if config.has_option('Cli', 'secondary_schedule') else False
+    secondary = (config.get('Cli', 'secondary_schedule')
+                 if config.has_option('Cli', 'secondary_schedule')
+                 else False)
 
 
 def get_open_incidents():
-    open_incidents_count = pagerduty.get_open_incidents(just_count=True)['total']
-    if open_incidents_count:
+    incidents_count = pagerduty.get_open_incidents(just_count=True)['total']
+    if incidents_count:
         return '''
-        <h3><a class="alert" href="https://riptano.pagerduty.com/incidents" target="_blank">
+        <h3><a class="alert" href="https://riptano.pagerduty.com/incidents"'
+               ' target="_blank">
             Open tickets: %s
         </a></h3>
-        <br/>\n''' % open_incidents_count
+        <br/>\n''' % incidents_count
     return ''
 
 
@@ -69,7 +72,8 @@ def generate_page():
         secondary = pagerduty.get_daily_schedule(secondary)
 
     return """Content-Type: text/html\n
-    <link href="pagerduty.css" media="all" rel="stylesheet" type="text/css" />\n{0}%s
+    <link href="pagerduty.css" media="all" rel="stylesheet" '
+    'type="text/css" />\n{0}%s
     <br/>
     <a href="full-schedule.py" target="_blank">Full Schedule</a>
     """ % format_results(primary, secondary)
@@ -88,7 +92,8 @@ def main():
     read_configurations()
     try:
         d = shelve.open('pagerduty.db')
-        if 'on_call' in d and (time.time() - d['on_call']['last_pulled']) < cache_timeout:
+        if ('on_call' in d and
+                (time.time() - d['on_call']['last_pulled']) < cache_timeout):
             print d['on_call']['result'].format(get_open_incidents())
         else:
             print save_and_return(d).format(get_open_incidents())

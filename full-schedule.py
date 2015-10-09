@@ -23,13 +23,17 @@ def read_configurations():
     config = ConfigParser.RawConfigParser()
     config.read(configfile)
 
-    secondary = config.get('Cli', 'secondary_schedule') if config.has_option('Cli', 'secondary_schedule') else False
+    secondary = (config.get('Cli', 'secondary_schedule')
+                 if config.has_option('Cli', 'secondary_schedule')
+                 else False)
 
 
 def generate_page():
     try:
         d = shelve.open('pagerduty.db')
-        if 'full_listing' not in d or (time.time() - d['full_listing']['last_pulled']) > cache_timeout:
+        if ('full_listing' not in d
+                or (time.time()
+                    - d['full_listing']['last_pulled']) > cache_timeout):
             # Pull full_schedule
             global secondary
             primary = pagerduty.get_user_schedule()
@@ -39,7 +43,8 @@ def generate_page():
             # Save pulled information
             packaged_dict = {}
             packaged_dict['last_pulled'] = time.time()
-            packaged_dict['result'] = cli.format_results(primary, secondary, True)
+            packaged_dict['result'] = cli.format_results(primary, secondary,
+                                                         True)
             d['full_listing'] = packaged_dict
     finally:
         result = d['full_listing']['result']

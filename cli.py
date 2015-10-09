@@ -22,7 +22,7 @@ secondary = False
 def email_msg(subject, msg_to, text, html):
     msg_from = '"Pager Duty Scheduling"'
 
-    # Create message container - the correct MIME type is multipart/alternative.
+    # Create message container - the correct MIME type is multipart/alternative
     msg = MIMEMultipart('alternative')
     msg['Subject'] = subject
     msg['From'] = msg_from
@@ -59,7 +59,8 @@ def format_results(primary, secondary=False, html=False):
 
         result = placeholder.format('Shift Start', 'Primary')
         for date in dates:
-            result += placeholder.format(primary[date]['shift_start'], primary[date]['agent_name'])
+            result += placeholder.format(primary[date]['shift_start'],
+                                         primary[date]['agent_name'])
     else:
         dates = primary.keys() + secondary.keys()
         dates = set(dates)
@@ -71,11 +72,16 @@ def format_results(primary, secondary=False, html=False):
 
         result = placeholder.format('Shift Start', 'Primary', 'Secondary')
         for date in dates:
-            shift_start = primary[date]['shift_start'] if date in primary else secondary[date]['shift_start']
-            primary_agent = primary[date]['agent_name'] if date in primary else ''
-            secondary_agent = secondary[date]['agent_name'] if date in secondary else ''
+            shift_start = (primary[date]['shift_start']
+                           if date in primary
+                           else secondary[date]['shift_start'])
+            primary_agent = (primary[date]['agent_name']
+                             if date in primary else '')
+            secondary_agent = (secondary[date]['agent_name']
+                               if date in secondary else '')
 
-            result += placeholder.format(shift_start, primary_agent, secondary_agent)
+            result += placeholder.format(shift_start,
+                                         primary_agent, secondary_agent)
 
     if html:
         return '<table border="1" cellpadding="5">\n%s</table>' % result
@@ -144,7 +150,9 @@ def email_today():
 
 We wanted to notify you that you're on call today.
 
-Once again, the Support Team appreciates your contributions. However, if you cannot fulfill your duty, please notify your backup immediately. It is vital for you to communicate this with your teammate.
+Once again, the Support Team appreciates your contributions. However, if you
+cannot fulfill your duty, please notify your backup immediately. It is vital
+for you to communicate this with your teammate.
 
 %s
 Thanks,
@@ -152,7 +160,8 @@ The Support Team
     """
 
     txt = email % format_results(primary, secondary)
-    html = email.replace('\n', '<br>\n') % format_results(primary, secondary, html=True)
+    html = email.replace('\n', '<br>\n') % format_results(primary,
+                                                          secondary, html=True)
 
     email_list = extract_emails(primary, secondary)
 
@@ -172,7 +181,8 @@ def email_week():
 
 Below is the Pager Duty schedule for next week.
 
-If you cannot fulfill your duty, please notify your backup immediately. It is vital for you to communicate this with your teammate.
+If you cannot fulfill your duty, please notify your backup immediately. It is
+vital for you to communicate this with your teammate.
 
 %s
 Thanks,
@@ -180,7 +190,8 @@ The Support Team
     """
 
     txt = email % format_results(primary, secondary)
-    html = email.replace('\n', '<br>\n') % format_results(primary, secondary, html=True)
+    html = email.replace('\n', '<br>\n') % format_results(primary,
+                                                          secondary, html=True)
 
     email_list = extract_emails(primary, secondary)
 
@@ -202,10 +213,16 @@ def read_configurations():
     config = ConfigParser.RawConfigParser()
     config.read(configfile)
 
-    secondary = config.get('Cli', 'secondary_schedule') if config.has_option('Cli', 'secondary_schedule') else False
-    bypass_prompts = config.get('Cli', 'bypass_prompts') if config.has_option('Cli', 'bypass_prompts') else False
+    secondary = (config.get('Cli', 'secondary_schedule')
+                 if config.has_option('Cli', 'secondary_schedule')
+                 else False)
+    bypass_prompts = (config.get('Cli', 'bypass_prompts')
+                      if config.has_option('Cli', 'bypass_prompts')
+                      else False)
     bypass_prompts = bypass_prompts.lower() == 'true'
-    reply_to = config.get('Cli', 'reply_to') if config.has_option('Cli', 'reply_to') else False
+    reply_to = (config.get('Cli', 'reply_to')
+                if config.has_option('Cli', 'reply_to')
+                else False)
 
 
 def parse_options():
@@ -224,8 +241,8 @@ def parse_options():
                       action="store_true", help="List the next 90 days")
     parser.add_option("--email_today", dest="email_today",
                       action="store_true", help="Email the today's schedule")
-    parser.add_option("--email_week", dest="email_week",
-                      action="store_true", help="Email the current week's schedule")
+    parser.add_option("--email_week", dest="email_week", action="store_true",
+                      help="Email the current week's schedule")
 
     (options, args) = parser.parse_args()
 
