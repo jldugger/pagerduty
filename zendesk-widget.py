@@ -88,7 +88,7 @@ def main():
     read_configurations()
     try:
         d = shelve.open('pagerduty.db')
-        if d.has_key('on_call') and (time.time() - d['on_call']['last_pulled']) < cache_timeout:
+        if 'on_call' in d and (time.time() - d['on_call']['last_pulled']) < cache_timeout:
             print d['on_call']['result'].format(get_open_incidents())
         else:
             print save_and_return(d).format(get_open_incidents())
