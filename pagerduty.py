@@ -57,7 +57,6 @@ def get_authentication():
         if timezone:
             os.environ['TZ'] = timezone
             time.tzset()
-       
 
     authenticated = 'In Progress'
     if "<error>" in get_schedule(primary_schedule):

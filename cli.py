@@ -48,7 +48,6 @@ def email_msg(subject, msg_to, text, html):
     s.quit()
 
 
-
 def format_results(primary, secondary=False, html=False):
     if not secondary:
         dates = primary.keys()
@@ -189,7 +188,6 @@ The Support Team
         email_msg("You're on call next week", email_list, txt, html)
     else:
         pass
-
 
 
 def read_configurations():
