@@ -53,8 +53,8 @@ def get_authentication():
         primary_schedule = config.get('PagerDuty', 'primary_schedule') if config.has_option('PagerDuty', 'primary_schedule') else raw_input('PagerDuty Schedule ID: ')
         shift_start_hour = int(config.get('PagerDuty', 'shift_start_hour')) * -1 if config.has_option('PagerDuty', 'shift_start_hour') else int(raw_input('Schedule Start Hour: ')) * -1
         timezone = config.get('PagerDuty', 'timezone') if config.has_option('PagerDuty', 'timezone') else None
-	if timezone:
-	    os.environ['TZ'] = timezone
+        if timezone:
+            os.environ['TZ'] = timezone
             time.tzset()
        
 
