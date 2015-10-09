@@ -42,7 +42,7 @@ def email_msg(subject, msg_to, text, html):
     # Send the message via gmail SMTP server.
     s = smtplib.SMTP(config.get('SMTP', 'server'))
     s.starttls()
-    s.login(config.get('SMTP', 'email'),config.get('SMTP', 'password'))
+    s.login(config.get('SMTP', 'email'), config.get('SMTP', 'password'))
     s.sendmail(msg_from, msg_to, msg.as_string())
     s.quit()
 
