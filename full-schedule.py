@@ -29,7 +29,7 @@ def read_configurations():
 def generate_page():
     try:
         d = shelve.open('pagerduty.db')
-        if not 'full_listing' in d or (time.time() - d['full_listing']['last_pulled']) > cache_timeout:
+        if 'full_listing' not in d or (time.time() - d['full_listing']['last_pulled']) > cache_timeout:
             # Pull full_schedule
             global secondary
             primary = pagerduty.get_user_schedule()
