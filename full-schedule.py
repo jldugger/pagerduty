@@ -12,6 +12,7 @@ import pagerduty
 
 cache_timeout = 60 * 60
 
+
 def read_configurations():
     global config
     global secondary
@@ -23,6 +24,7 @@ def read_configurations():
     config.read(configfile)
 
     secondary = config.get('Cli', 'secondary_schedule') if config.has_option('Cli', 'secondary_schedule') else False
+
 
 def generate_page():
     try:
@@ -48,6 +50,7 @@ def generate_page():
     <body class='full_schedule'>\n%s
     </body>
     """ % result
+
 
 def main():
     read_configurations()

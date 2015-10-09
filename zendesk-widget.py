@@ -11,6 +11,7 @@ import pagerduty
 
 cache_timeout = 60 * 60
 
+
 def read_configurations():
     global config
     global secondary
@@ -23,6 +24,7 @@ def read_configurations():
 
     secondary = config.get('Cli', 'secondary_schedule') if config.has_option('Cli', 'secondary_schedule') else False
 
+
 def get_open_incidents():
     open_incidents_count = pagerduty.get_open_incidents(just_count=True)['total']
     if open_incidents_count:
@@ -32,6 +34,7 @@ def get_open_incidents():
         </a></h3>
         <br/>\n''' % open_incidents_count
     return ''
+
 
 def format_results(primary, secondary=False):
     if not secondary:
@@ -57,6 +60,7 @@ def format_results(primary, secondary=False):
 
     return result
 
+
 def generate_page():
     global secondary
 
@@ -69,6 +73,7 @@ def generate_page():
     <br/>
     <a href="full-schedule.py" target="_blank">Full Schedule</a>
     """ % format_results(primary, secondary)
+
 
 def save_and_return(d):
     result = generate_page()

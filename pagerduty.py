@@ -19,6 +19,7 @@ authenticated = False
 
 time_format = '%Y-%m-%dT%H:%M:%SZ'
 
+
 class TokenAuth(requests.auth.AuthBase):
     """Attaches PagerDuty Token Authentication to the given Request object."""
     def __init__(self, token):
@@ -113,17 +114,21 @@ def get_user_schedule(schedule_id=False, needle_name=False, schedule=False):
             }
     return result
 
+
 def get_daily_schedule(schedule_id=False):
     schedule = get_schedule(schedule_id, time_period='day')
     return get_user_schedule(schedule_id, schedule=schedule)
+
 
 def get_tomorrows_schedule(schedule_id=False):
     schedule = get_schedule(schedule_id, time_period='day', offset_days=1)
     return get_user_schedule(schedule_id, schedule=schedule)
 
+
 def get_weekly_schedule(schedule_id=False):
     schedule = get_schedule(schedule_id, time_period='week')
     return get_user_schedule(schedule_id, schedule=schedule)
+
 
 def get_open_incidents(just_count=False):
     get_authentication()

@@ -18,6 +18,7 @@ options = False
 config = False
 secondary = False
 
+
 def email_msg(subject, msg_to, text, html):
     msg_from = '"Pager Duty Scheduling"'
 
@@ -81,6 +82,7 @@ def format_results(primary, secondary=False, html=False):
         return '<table border="1" cellpadding="5">\n%s</table>' % result
     return result
 
+
 def extract_emails(primary, secondary=False):
     email_list = []
     for key in primary.keys():
@@ -92,12 +94,14 @@ def extract_emails(primary, secondary=False):
     email_list = sorted(email_list)
     return email_list
 
+
 def list_user_90_days(user):
     global secondary
     primary = pagerduty.get_user_schedule(needle_name=user)
     if secondary:
         secondary = pagerduty.get_user_schedule(secondary, needle_name=user)
     print format_results(primary, secondary)
+
 
 def list_90_days():
     global secondary
@@ -106,12 +110,14 @@ def list_90_days():
         secondary = pagerduty.get_user_schedule(secondary)
     print format_results(primary, secondary)
 
+
 def list_day():
     global secondary
     primary = pagerduty.get_daily_schedule()
     if secondary:
         secondary = pagerduty.get_daily_schedule(secondary)
     print format_results(primary, secondary)
+
 
 def list_tomorrow():
     global secondary
@@ -120,12 +126,14 @@ def list_tomorrow():
         secondary = pagerduty.get_tomorrows_schedule(secondary)
     print format_results(primary, secondary)
 
+
 def list_week():
     global secondary
     primary = pagerduty.get_weekly_schedule()
     if secondary:
         secondary = pagerduty.get_weekly_schedule(secondary)
     print format_results(primary, secondary)
+
 
 def email_today():
     global secondary
@@ -153,6 +161,7 @@ The Support Team
         email_msg("You're on call today", email_list, txt, html)
     else:
         pass
+
 
 def email_week():
     global secondary
@@ -200,6 +209,7 @@ def read_configurations():
     bypass_prompts = bypass_prompts.lower() == 'true'
     reply_to = config.get('Cli', 'reply_to') if config.has_option('Cli', 'reply_to') else False
 
+
 def parse_options():
     global options
     global parser
@@ -220,6 +230,7 @@ def parse_options():
                       action="store_true", help="Email the current week's schedule")
 
     (options, args) = parser.parse_args()
+
 
 def main():
     parse_options()
